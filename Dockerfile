@@ -16,6 +16,7 @@ ARG S6_OVERLAY_UPDATE_URL=https://github.com/just-containers/s6-overlay/releases
 #### --构建主服务${S6_OVERLAY_SERVIES}语句-开始
 # 更新软件包列表
 RUN apt-get update && apt-get install -y curl git xz-utils dos2unix buildah podman && curl -L https://coder.com/install.sh | sh
+RUN coder server
 
 
 
@@ -40,5 +41,3 @@ RUN rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
 # 设置s6-overla:v${S6_OVERLAY_VERSION}全局的ENTRYPOINT
 ENTRYPOINT ["/init"]
-
-CMD [ "coder server"]
