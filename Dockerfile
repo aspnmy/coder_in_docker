@@ -19,9 +19,9 @@ ARG USER_PWD=${USER_NAME}:${USER_NAME}@#1314
 # 设置初始root密码
 RUN echo ${ROOT_PWD} | chpasswd && useradd -m -s /bin/bash ${USER_NAME} &&  echo ${USER_PWD} | chpasswd
 
-RUN apt-get update && apt-get install -y curl git xz-utils dos2unix buildah podman sudo && curl -L https://coder.com/install.sh | sh
+RUN apt-get update && apt-get install -y curl git xz-utils dos2unix buildah podman sudo
 # 切换rootless用户
-RUN su - ${USER_NAME} && coder server --access-url http://107.173.254.124:3000
+RUN su - ${USER_NAME} &&  curl -L https://coder.com/install.sh | sh && coder server --access-url http://107.173.254.124:3000
 
 
 # s6旧版配置方式
