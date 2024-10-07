@@ -15,7 +15,7 @@ ARG S6_OVERLAY_UPDATE_URL=https://github.com/just-containers/s6-overlay/releases
 
 #### --构建主服务${S6_OVERLAY_SERVIES}语句-开始
 # 更新软件包列表
-RUN apt-get update && apt-get install -y curl && curl -L https://coder.com/install.sh | sh
+RUN apt-get update && apt-get install -y curl git xz-utils dos2unix && curl -L https://coder.com/install.sh | sh
 
 
 
