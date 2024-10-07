@@ -21,7 +21,7 @@ RUN echo ${ROOT_PWD} | chpasswd && useradd -m -s /bin/bash ${USER_NAME} &&  echo
 
 RUN apt-get update && apt-get install -y curl git xz-utils dos2unix buildah podman sudo
 # 切换rootless用户
-RUN su - ${USER_NAME} &&  curl -L https://coder.com/install.sh | sh && coder server --access-url http://107.173.254.124:3000
+RUN su - ${USER_NAME} &&  curl -L https://coder.com/install.sh | sh && coder server
 
 
 # s6旧版配置方式
