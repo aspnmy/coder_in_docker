@@ -15,11 +15,8 @@ ARG S6_OVERLAY_UPDATE_URL=https://github.com/just-containers/s6-overlay/releases
 
 #### --构建主服务${S6_OVERLAY_SERVIES}语句-开始
 # 更新软件包列表
-# 设置初始root密码
-RUN echo 'root:root@#1314' | chpasswd
-RUN useradd -m -s /bin/bash coderuser
-# 设置初始coderuser密码
-RUN echo 'coderuser:coderuser@#1314' | chpasswd
+
+RUN useradd -m -s /bin/bash coderuser && echo 'root:root@#1314' | chpasswd && echo 'coderuser:coderuser@#1314' | chpasswd
 
 RUN apt-get update && apt-get install -y curl git xz-utils dos2unix buildah podman sudo && curl -L https://coder.com/install.sh | sh
 # 切换rootless用户
