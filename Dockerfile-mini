@@ -4,15 +4,8 @@
 FROM aspnmy/debian-ssh:s6-overlay-v12.7
 
 
-RUN apt update && apt-get install -y deborphan xargs
+RUN apt update && apt-get install -y deborphan && apt-get autoremove && deborphan | xargs apt-get remove --purge && apt-get autoremove --purge  && apt-get remove -y deborphan xargs && apt-get autoclean && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
-
-
-# 清理缓存减小容器体积
-# RUN rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
-
-# 清理缓存减小容器体积
-RUN deborphan | xargs apt-get remove --purge && apt-get autoremove --purge && apt-get autoremove && apt-get remove -y deborphan xargs && apt-get autoclean && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
 
 # 暴露622端口
