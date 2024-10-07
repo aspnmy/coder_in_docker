@@ -4,7 +4,7 @@
 FROM aspnmy/debian-ssh:s6-overlay-v12.7
 
 
-
+RUN apt update && apt-get install -y deborphan
 
 
 
