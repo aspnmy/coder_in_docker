@@ -4,7 +4,7 @@
 FROM aspnmy/debian-ssh:s6-overlay-v12.7
 
 
-RUN apt update && apt-get install -y deborphan && apt-get autoremove && deborphan | xargs apt-get remove --purge && apt-get autoremove --purge  && apt-get remove -y deborphan xargs && apt-get autoclean && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
+RUN apt update && apt-get install -y deborphan && apt-get autoremove && deborphan | xargs apt-get remove --purge && apt-get autoremove --purge  && apt-get remove -y deborphan && apt-get autoclean && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
 
 
