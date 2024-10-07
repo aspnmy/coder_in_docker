@@ -1,34 +1,28 @@
 # 一致性构建镜像 buildah bud --no-cache -f Dockerfile -t 容器名
 
-FROM aspnmy/debian:base
 
-ARG S6_OVERLAY_VERSION=3.2.0.0
-# 更改主服务名称 只需在此配置变量名即可 其他服务无需理会
-ARG S6_OVERLAY_SERVIES=coder
-# 主服务项目PATH
-ARG S6_SERVIES_PATH=/etc/s6-overlay/s6-rc.d/${S6_OVERLAY_SERVIES}
+FROM aspnmy/debian-ssh:s6-overlay-v12.7
+
+ARG ROOT_PWD=root:root@#1314
+# 主服务项目名称
+ARG SERVIES_NAME=coder
+ARG USER_NAME=${SERVIES_NAME}user
+ARG USER_PWD=${USER_NAME}:${USER_NAME}@#1314
+
 
 # 下面是固定的业务常量不需要修改
 
-# S6_OVERLAY_UPDATE_URL
-ARG S6_OVERLAY_UPDATE_URL=https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}
 
-#### --构建主服务${S6_OVERLAY_SERVIES}语句-开始
+
+#### --构建主服务${SERVIES_NAME}语句-开始
 # 更新软件包列表
-
-RUN useradd -m -s /bin/bash coderuser && echo 'root:root@#1314' | chpasswd && echo 'coderuser:coderuser@#1314' | chpasswd
+# 设置初始root密码
+RUN echo ${ROOT_PWD} | chpasswd && useradd -m -s /bin/bash ${USER_NAME} &&  echo ${USER_PWD} | chpasswd
 
 RUN apt-get update && apt-get install -y curl git xz-utils dos2unix buildah podman sudo && curl -L https://coder.com/install.sh | sh
 # 切换rootless用户
-RUN su - coderuser && coder server --access-url http://107.173.254.124:3000
+RUN su - ${USER_NAME} && coder server --access-url http://107.173.254.124:3000
 
-#### --构建主服务${S6_OVERLAY_SERVIES}语句-结束
-
-#### --构建超级进程服务${S6_OVERLAY_SERVIES}语句-开始-不清楚不要改
-# ----安装S6_OVERLAY-github下载最新版s6-overlay 不需要更改
-ADD ${S6_OVERLAY_UPDATE_URL}/s6-overlay-noarch.tar.xz /tmp
-ADD ${S6_OVERLAY_UPDATE_URL}/s6-overlay-x86_64.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
 
 # s6旧版配置方式
 EXPOSE 3000
