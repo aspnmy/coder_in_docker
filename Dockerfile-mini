@@ -1,0 +1,26 @@
+# 一致性构建镜像 buildah bud --no-cache -f Dockerfile -t 容器名
+
+
+FROM aspnmy/debian-ssh:s6-overlay-v12.7
+
+
+
+
+
+
+# 清理缓存减小容器体积
+# RUN rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
+
+# 清理缓存减小容器体积
+RUN deborphan | xargs sudo apt-get remove --purge && apt-get autoremove --purge && apt-get autoremove && apt-get autoclean && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
+
+
+# 暴露622端口
+EXPOSE 622
+
+
+
+# 设置s6-overla:v${S6_OVERLAY_VERSION}全局的ENTRYPOINT
+ENTRYPOINT ["/init"]
+
+CMD [ "/usr/sbin/sshd","-D" ]

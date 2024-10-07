@@ -19,16 +19,20 @@ ARG USER_PWD=${USER_NAME}:${USER_NAME}@#1314
 # 设置初始root密码
 RUN echo ${ROOT_PWD} | chpasswd && useradd -m -s /bin/bash ${USER_NAME} &&  echo ${USER_PWD} | chpasswd
 
-RUN apt-get update && apt-get install -y curl git xz-utils dos2unix buildah podman sudo
+RUN apt-get update && apt-get install -y curl
 # 切换rootless用户
-RUN su - ${USER_NAME} &&  curl -L https://coder.com/install.sh | sh && coder server
+# RUN su - ${USER_NAME} &&  curl -L https://coder.com/install.sh | sh && coder server
 
 
 # s6旧版配置方式
 EXPOSE 3000
 
 # 清理缓存减小容器体积
-RUN rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
+# RUN rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
+
+# 清理缓存减小容器体积
+RUN deborphan | xargs sudo apt-get remove --purge && apt-get autoremove --purge && apt-get autoremove && apt-get autoclean && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
+
 
 # 设置s6-overla:v${S6_OVERLAY_VERSION}全局的ENTRYPOINT
 ENTRYPOINT ["/init"]
